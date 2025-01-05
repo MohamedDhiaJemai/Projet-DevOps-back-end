@@ -20,8 +20,6 @@ pipeline {
                 }
             }
         }
-        // Commenter ou supprimer la section des tests
-        /*
         stage('Run Tests') {
             steps {
                 dir("${env.BACKEND_DIR}") {
@@ -32,12 +30,12 @@ pipeline {
                 }
             }
         }
-        */
         stage('Build Docker Image for Back-end') {
             steps {
                 script {
                     echo 'Building Docker image for back-end...'
-                    sh 'docker build -t ${env.IMAGE_NAME} ${env.BACKEND_DIR}'  // Construire l'image Docker
+                    // Correction de la substitution des variables dans la commande Docker
+                    sh "docker build -t ${IMAGE_NAME} ${BACKEND_DIR}"  // Construire l'image Docker
                 }
             }
         }
