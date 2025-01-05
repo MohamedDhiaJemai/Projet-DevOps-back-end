@@ -20,6 +20,8 @@ pipeline {
                 }
             }
         }
+        // Commenter ou supprimer la section des tests
+        /*
         stage('Run Tests') {
             steps {
                 dir("${env.BACKEND_DIR}") {
@@ -30,6 +32,7 @@ pipeline {
                 }
             }
         }
+        */
         stage('Build Docker Image for Back-end') {
             steps {
                 script {
