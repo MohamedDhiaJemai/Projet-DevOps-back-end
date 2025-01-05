@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        BACKEND_DIR = 'nodejs-express-sequelize-mysql-master'  // Répertoire du projet Node.js
+        BACKEND_DIR = '.'  // Répertoire du projet Node.js
         IMAGE_NAME = 'my-node-backend-image'  // Nom de l'image Docker du back-end
     }
     stages {
