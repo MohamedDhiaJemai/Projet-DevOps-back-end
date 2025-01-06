@@ -4,6 +4,8 @@ pipeline {
         BACKEND_DIR = '.'  // Répertoire du projet Node.js
         IMAGE_NAME = 'my-node-backend-image'  // Nom de l'image Docker du back-end
         SONAR_SERVER = 'SonarQube'  // Nom du serveur SonarQube configuré dans Jenkins
+        SONAR_SCANNER_HOME = '/path/to/sonar-scanner'  // Chemin vers SonarQube Scanner
+        PATH = "${SONAR_SCANNER_HOME}/bin:${env.PATH}"  // Ajoute sonar-scanner à la variable PATH
     }
     stages {
         stage('Checkout') {
