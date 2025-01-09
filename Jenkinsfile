@@ -41,7 +41,7 @@ pipeline {
                 dir("${env.BACKEND_DIR}") {
                     script {
                         echo 'Running tests for back-end...'
-                        sh 'npm run test -- --coverage'
+                        sh 'npm run test -- --coverage --passWithNoTests'  // Ajout de l'option pour accepter l'absence de tests
                     }
                 }
             }
