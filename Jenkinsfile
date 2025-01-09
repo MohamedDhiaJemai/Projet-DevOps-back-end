@@ -17,5 +17,12 @@ pipeline {
                 sh 'sonar-scanner --version' // Vérifie si sonar-scanner est accessible
             }
         }
+
+        stage('SonarQube Analysis') {
+    steps {
+        sh 'sonar-scanner --version'
+    }
+}
+
     }
 }
