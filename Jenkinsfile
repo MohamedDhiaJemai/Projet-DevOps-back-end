@@ -25,6 +25,17 @@ pipeline {
             }
         }
         
+        stage('Install Jest') {
+            steps {
+                dir("${env.BACKEND_DIR}") {
+                    script {
+                        echo 'Installing Jest...'
+                        sh 'npm install --save-dev jest'
+                    }
+                }
+            }
+        }
+        
         stage('Run Tests') {
             steps {
                 dir("${env.BACKEND_DIR}") {
