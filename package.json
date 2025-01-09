@@ -4,8 +4,8 @@
   "description": "Node.js Rest Apis with Express, Sequelize & MySQL",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Tests are skipped\" && exit 0"
-  },
+  "test": "jest --ci --reporters=default --reporters=jest-junit"
+},
   "keywords": [
     "nodejs",
     "express",
