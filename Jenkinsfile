@@ -70,7 +70,7 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 30, unit: 'MINUTES') {  // Augmenter le timeout à 30 minutes
+                timeout(time: 10, unit: 'MINUTES') {  // Réduction du timeout à 10 minutes
                     script {
                         def retries = 3  // Nombre de réessais
                         def qualityGate = null
@@ -81,7 +81,7 @@ pipeline {
                                 break
                             }
                             echo "Quality Gate is not OK. Retrying... (${i + 1}/${retries})"
-                            sleep(time: 5, unit: 'MINUTES')  // Pause avant réessayer
+                            sleep(time: 1, unit: 'MINUTES')  // Pause plus courte avant réessayer
                         }
                         if (qualityGate.status != 'OK') {
                             error "SonarQube Quality Gate failed after retries: ${qualityGate.status}"
