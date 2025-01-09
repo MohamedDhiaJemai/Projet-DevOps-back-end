@@ -40,15 +40,18 @@ pipeline {
             steps {
                 withSonarQubeEnv('SonarQube') {
                     dir("${env.BACKEND_DIR}") {
-                        sh '''
-                        sonar-scanner \
-                        -Dsonar.projectKey=node-backend-app \
-                        -Dsonar.projectName="Node Backend App" \
-                        -Dsonar.projectVersion=1.0 \
-                        -Dsonar.sources=. \
-                        -Dsonar.sourceEncoding=UTF-8 \
-                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-                        '''
+                        script {
+                            echo 'Running SonarQube analysis...'
+                            sh '''
+                            sonar-scanner \
+                            -Dsonar.projectKey=node-backend-app \
+                            -Dsonar.projectName="Node Backend App" \
+                            -Dsonar.projectVersion=1.0 \
+                            -Dsonar.sources=. \
+                            -Dsonar.sourceEncoding=UTF-8 \
+                            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                            '''
+                        }
                     }
                 }
             }
@@ -56,8 +59,13 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                timeout(time: 10, unit: 'MINUTES') {  // Augmenter le timeout à 10 minutes
+                    script {
+                        def qualityGate = waitForQualityGate()
+                        if (qualityGate.status != 'OK') {
+                            error "SonarQube Quality Gate failed: ${qualityGate.status}"
+                        }
+                    }
                 }
             }
         }
@@ -96,4 +104,3 @@ pipeline {
         }
     }
 }
-
