@@ -61,9 +61,19 @@ pipeline {
             steps {
                 timeout(time: 30, unit: 'MINUTES') {  // Augmenter le timeout à 30 minutes
                     script {
-                        def qualityGate = waitForQualityGate()
+                        def retries = 3  // Nombre de réessais
+                        def qualityGate = null
+                        for (int i = 0; i < retries; i++) {
+                            qualityGate = waitForQualityGate()
+                            echo "Quality Gate Status: ${qualityGate.status}"  // Affichage du status
+                            if (qualityGate.status == 'OK') {
+                                break
+                            }
+                            echo "Quality Gate is not OK. Retrying... (${i + 1}/${retries})"
+                            sleep(time: 5, unit: 'MINUTES')  // Pause avant réessayer
+                        }
                         if (qualityGate.status != 'OK') {
-                            error "SonarQube Quality Gate failed: ${qualityGate.status}"
+                            error "SonarQube Quality Gate failed after retries: ${qualityGate.status}"
                         }
                     }
                 }
@@ -78,29 +88,14 @@ pipeline {
                 }
             }
         }
-        
-        stage('Push Docker Image to Nexus') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-                    script {
-                        echo 'Pushing Docker image to Nexus...'
-                        sh '''
-                        docker tag ${IMAGE_NAME} <nexus-repo-url>:<port>/<repository-name>:latest
-                        docker login <nexus-repo-url>:<port> -u ${NEXUS_USER} -p ${NEXUS_PASS}
-                        docker push <nexus-repo-url>:<port>/<repository-name>:latest
-                        '''
-                    }
-                }
-            }
-        }
     }
     
     post {
         success {
-            echo '✅ Back-end build, SonarQube analysis, and Docker image creation/push successful!'
+            echo '✅ Back-end build, SonarQube analysis, and Docker image creation successful!'
         }
         failure {
-            echo '❌ Back-end build, SonarQube analysis, or Docker image creation/push failed!'
+            echo '❌ Back-end build, SonarQube analysis, or Docker image creation failed!'
         }
     }
 }
