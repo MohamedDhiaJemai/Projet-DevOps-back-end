@@ -25,17 +25,17 @@ pipeline {
             }
         }
         
-        stage('Install Jest') {
+        stage('Install Jest and jest-junit') {
             steps {
                 dir("${env.BACKEND_DIR}") {
                     script {
-                        echo 'Installing Jest...'
-                        sh 'npm install --save-dev jest'
+                        echo 'Installing Jest and jest-junit...'
+                        sh 'npm install --save-dev jest jest-junit'
                     }
                 }
             }
         }
-        
+
         stage('Run Tests') {
             steps {
                 dir("${env.BACKEND_DIR}") {
