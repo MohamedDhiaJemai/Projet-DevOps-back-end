@@ -11,7 +11,7 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
+        stage('SonarQube Analysis 1') {
             steps {
                 sh 'echo "PATH: $PATH"'  // Vérifie si sonar-scanner est dans PATH
                 sh 'sonar-scanner --version'  // Vérifie si sonar-scanner est accessible
