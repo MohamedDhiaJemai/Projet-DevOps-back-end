@@ -59,7 +59,7 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {  // Augmenter le timeout à 10 minutes
+                timeout(time: 30, unit: 'MINUTES') {  // Augmenter le timeout à 30 minutes
                     script {
                         def qualityGate = waitForQualityGate()
                         if (qualityGate.status != 'OK') {
