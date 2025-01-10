@@ -13,7 +13,7 @@ pipeline {
                 checkout scm  // Récupérer le code source depuis GitHub
             }
         }
-        
+
         stage('Install Dependencies') {
             steps {
                 dir("${env.BACKEND_DIR}") {
@@ -24,7 +24,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Install Jest and jest-junit') {
             steps {
                 dir("${env.BACKEND_DIR}") {
@@ -70,27 +70,18 @@ pipeline {
 
         stage('Quality Gate') {
             steps {
-                timeout(time: 10, unit: 'MINUTES') {  // Réduction du timeout à 10 minutes
+                timeout(time: 1, unit: 'HOURS') {  // Timeout étendu à 1 heure
                     script {
-                        def retries = 3  // Nombre de réessais
-                        def qualityGate = null
-                        for (int i = 0; i < retries; i++) {
-                            qualityGate = waitForQualityGate()
-                            echo "Quality Gate Status: ${qualityGate.status}"  // Affichage du status
-                            if (qualityGate.status == 'OK') {
-                                break
-                            }
-                            echo "Quality Gate is not OK. Retrying... (${i + 1}/${retries})"
-                            sleep(time: 1, unit: 'MINUTES')  // Pause plus courte avant réessayer
-                        }
+                        def qualityGate = waitForQualityGate()  // Vérification sans boucle
+                        echo "Quality Gate Status: ${qualityGate.status}"
                         if (qualityGate.status != 'OK') {
-                            error "SonarQube Quality Gate failed after retries: ${qualityGate.status}"
+                            error "SonarQube Quality Gate failed: ${qualityGate.status}"
                         }
                     }
                 }
             }
         }
-        
+
         stage('Build Docker Image for Back-end') {
             steps {
                 script {
@@ -100,7 +91,7 @@ pipeline {
             }
         }
     }
-    
+
     post {
         success {
             echo '✅ Back-end build, SonarQube analysis, and Docker image creation successful!'
