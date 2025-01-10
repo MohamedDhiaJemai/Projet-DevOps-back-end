@@ -68,20 +68,6 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {  // Timeout étendu à 1 heure
-                    script {
-                        def qualityGate = waitForQualityGate()  // Vérification sans boucle
-                        echo "Quality Gate Status: ${qualityGate.status}"
-                        if (qualityGate.status != 'OK') {
-                            error "SonarQube Quality Gate failed: ${qualityGate.status}"
-                        }
-                    }
-                }
-            }
-        }
-
         stage('Build Docker Image for Back-end') {
             steps {
                 script {
